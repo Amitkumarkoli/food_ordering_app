@@ -1,16 +1,25 @@
-# food_ordering_app
+Food Ordering App
+A Flutter app for ordering food from local restaurants, built for an internship assignment. Uses BloC architecture, SOLID principles, and includes error handling and unit tests.
+Progress
 
-A new Flutter project.
+Step 1 (Complete): Project setup with Flutter environment, dependencies (flutter_bloc, equatable, google_fonts), and folder structure (core/, data/, domain/, presentation/).
+Step 2 (In Progress): Implemented data models (Restaurant, MenuItem, CartItem, Order) and mock repositories with simulated delays and errors (10% failure rate).
 
-## Getting Started
+Workflow Plan
 
-This project is a starting point for a Flutter application.
+Browse restaurants (list with name, cuisine, rating, image).
+View menu and add items to cart.
+Review cart with subtotal and fees.
+Place order with mock confirmation.
+Error handling: Network failures, empty cart validation, retry options.
 
-A few resources to get you started if this is your first Flutter project:
+Next Steps
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Implement Blocs for state management.
+Build UI with Material 3 and animations.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Setup Instructions
+
+Clone the repo: git clone <repo-url>
+Run flutter pub get
+Run flutter run on an emulator or device
