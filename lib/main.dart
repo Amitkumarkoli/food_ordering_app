@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_ordering_app/presentation/bloc/menu/menu_bloc.dart';
+import 'package:food_ordering_app/presentation/bloc/order/order_bloc.dart';
+import 'package:food_ordering_app/presentation/bloc/order/order_event.dart';
+import 'package:food_ordering_app/presentation/bloc/restaurants/restaurants_bloc.dart';
+import 'package:food_ordering_app/presentation/bloc/restaurants/restaurants_event.dart';
 import 'core/theme/app_theme.dart';
+import 'data/repositories/mock_restaurant_repository.dart';
+import 'data/repositories/mock_menu_repository.dart';
+import 'data/repositories/mock_order_repository.dart';
 
 void main() {
   runApp(const FoodOrderingApp());
@@ -11,14 +19,33 @@ class FoodOrderingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Food Ordering App',
-      theme: appTheme,
-      home: Scaffold(
-        appBar: AppBar(title: Text('Food Ordering')),
-        body: Center(child: Text('Workflow Placeholder')),
+    return MultiBlocProvider(
+      providers: [
+        RepositoryProvider(create: (_) => MockRestaurantRepository()),
+        RepositoryProvider(create: (_) => MockMenuRepository()),
+        RepositoryProvider(create: (_) => MockOrderRepository()),
+        BlocProvider(
+          create: (context) =>
+              RestaurantsBloc(context.read<MockRestaurantRepository>())
+                ..add(LoadRestaurants()),
+        ),
+        BlocProvider(
+          create: (context) => MenuBloc(context.read<MockMenuRepository>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              OrderBloc(context.read<MockOrderRepository>())..add(LoadCart()),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Food Ordering App',
+        theme: appTheme,
+        home: Scaffold(
+          appBar: AppBar(title: Text('Food Ordering')),
+          body: Center(child: Text('Workflow Placeholder')),
+        ),
+        debugShowCheckedModeBanner: false,
       ),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
