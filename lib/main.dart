@@ -9,6 +9,10 @@ import 'core/theme/app_theme.dart';
 import 'data/repositories/mock_restaurant_repository.dart';
 import 'data/repositories/mock_menu_repository.dart';
 import 'data/repositories/mock_order_repository.dart';
+import 'presentation/pages/home_screen.dart';
+import 'presentation/pages/menu_screen.dart';
+import 'presentation/pages/cart_screen.dart';
+import 'presentation/pages/order_confirmation_screen.dart';
 
 void main() {
   runApp(const FoodOrderingApp());
@@ -25,25 +29,27 @@ class FoodOrderingApp extends StatelessWidget {
         RepositoryProvider(create: (_) => MockMenuRepository()),
         RepositoryProvider(create: (_) => MockOrderRepository()),
         BlocProvider(
-          create: (context) =>
-              RestaurantsBloc(context.read<MockRestaurantRepository>())
-                ..add(LoadRestaurants()),
+          create: (context) => RestaurantsBloc(context.read<MockRestaurantRepository>())
+            ..add(LoadRestaurants()),
         ),
         BlocProvider(
           create: (context) => MenuBloc(context.read<MockMenuRepository>()),
         ),
         BlocProvider(
-          create: (context) =>
-              OrderBloc(context.read<MockOrderRepository>())..add(LoadCart()),
+          create: (context) => OrderBloc(context.read<MockOrderRepository>())
+            ..add(LoadCart()),
         ),
       ],
       child: MaterialApp(
         title: 'Food Ordering App',
         theme: appTheme,
-        home: Scaffold(
-          appBar: AppBar(title: Text('Food Ordering')),
-          body: Center(child: Text('Workflow Placeholder')),
-        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/menu': (context) => const MenuScreen(),
+          '/cart': (context) => const CartScreen(),
+          '/order': (context) => const OrderConfirmationScreen(),
+        },
         debugShowCheckedModeBanner: false,
       ),
     );

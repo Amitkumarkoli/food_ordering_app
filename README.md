@@ -7,13 +7,21 @@ Step 2 (Complete): Implemented data layer:
 Models: Restaurant, MenuItem, CartItem, Order with equatable for immutability.
 Mock repositories: RestaurantRepository, MenuRepository, OrderRepository with simulated network delays (1-2s) and random errors (10% failure rate).
 
+
 Step 3 (Complete): Implemented BloC state management:
 RestaurantsBloc: Loads list of restaurants with loading/error states.
 MenuBloc: Loads menu items for a selected restaurant.
 OrderBloc: Manages cart (add/remove items) and order placement.
 Updated main.dart with MultiBlocProvider for dependency injection.
 
-Next: Build UI screens and widgets for the workflow.
+
+Step 4 (Complete): Implemented UI:
+Screens: HomeScreen, MenuScreen, CartScreen, OrderConfirmationScreen.
+Widgets: RestaurantCard, MenuItemTile, CartItemTile for consistent design.
+Added Hero animations and AnimatedSwitcher for polish.
+
+
+Next: Add unit tests and take screenshots for submission.
 
 Workflow Plan
 
@@ -25,6 +33,11 @@ Error handling: Network failures, empty cart validation, retry options.
 
 Setup Instructions
 
-Clone the repo: git clone <https://github.com/Amitkumarkoli/food_ordering_app.git>
+Clone the repo: git clone [<repo-url>](https://github.com/Amitkumarkoli/food_ordering_app.git)
 Run flutter pub get
 Run flutter run on an emulator or device
+
+Screenshots
+(To be added after final testing)
+
+https://github.com/Amitkumarkoli/food_ordering_app.git
