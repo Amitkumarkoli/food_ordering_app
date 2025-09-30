@@ -1,27 +1,39 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:food_ordering_app/core/error/failures.dart';
-import '../../../data/repositories/order_repository.dart';
-import '../../../data/models/cart_item.dart';
-import 'order_event.dart';
-import 'order_state.dart';
+import 'package:food_ordering_app/data/models/cart_item.dart';
+import 'package:food_ordering_app/data/models/menu_item.dart';
+import 'package:food_ordering_app/data/models/order.dart';
+import 'package:food_ordering_app/data/repositories/order_repository.dart';
+import 'package:food_ordering_app/presentation/bloc/order/order_event.dart';
+import 'package:food_ordering_app/presentation/bloc/order/order_state.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
-  final OrderRepository repository;
+  final OrderRepository orderRepository;
+  List<CartItem> _cartItems = [];
 
-  OrderBloc(this.repository) : super(OrderInitial()) {
+  OrderBloc(this.orderRepository) : super(OrderInitial()) {
     on<AddToCart>(_onAddToCart);
     on<RemoveFromCart>(_onRemoveFromCart);
     on<LoadCart>(_onLoadCart);
     on<PlaceOrder>(_onPlaceOrder);
-    on<RetryPlaceOrder>(_onPlaceOrder);
+    on<RetryPlaceOrder>(_onRetryPlaceOrder);
   }
 
   Future<void> _onAddToCart(AddToCart event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      await repository.addToCart(CartItem(menuItem: event.menuItem, quantity: event.quantity));
-      final cartItems = await repository.getCart();
-      emit(CartLoaded(cartItems));
+      final cartItem = CartItem(menuItem: event.menuItem, quantity: event.quantity);
+      await orderRepository.addToCart(cartItem);
+      final existingIndex = _cartItems.indexWhere((item) => item.menuItem.id == event.menuItem.id);
+      if (existingIndex >= 0) {
+        _cartItems[existingIndex] = CartItem(
+          menuItem: event.menuItem,
+          quantity: _cartItems[existingIndex].quantity + event.quantity,
+        );
+      } else {
+        _cartItems = [..._cartItems, cartItem];
+      }
+      emit(CartLoaded(_cartItems));
     } catch (e) {
       emit(OrderError(e is Failure ? e : ServerFailure()));
     }
@@ -30,13 +42,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future<void> _onRemoveFromCart(RemoveFromCart event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      final cartItems = await repository.getCart();
-      final updatedCart = cartItems.where((item) => item.menuItem.id != event.menuItemId).toList();
-      await repository.clearCart();
-      for (final item in updatedCart) {
-        await repository.addToCart(item);
-      }
-      emit(CartLoaded(updatedCart));
+      _cartItems = _cartItems.where((item) => item.menuItem.id != event.menuItemId).toList();
+      emit(CartLoaded(_cartItems));
     } catch (e) {
       emit(OrderError(e is Failure ? e : ServerFailure()));
     }
@@ -45,18 +52,39 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future<void> _onLoadCart(LoadCart event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      final cartItems = await repository.getCart();
-      emit(CartLoaded(cartItems));
+      _cartItems = await orderRepository.getCart();
+      emit(CartLoaded(_cartItems));
     } catch (e) {
       emit(OrderError(e is Failure ? e : ServerFailure()));
     }
   }
 
-  Future<void> _onPlaceOrder(OrderEvent event, Emitter<OrderState> emit) async {
+  Future<void> _onPlaceOrder(PlaceOrder event, Emitter<OrderState> emit) async {
     emit(OrderLoading());
     try {
-      final cartItems = await repository.getCart();
-      final order = await repository.placeOrder(cartItems);
+      if (_cartItems.isEmpty) {
+        emit(OrderError(ValidationFailure('Cart is empty')));
+        return;
+      }
+      final order = await orderRepository.placeOrder(_cartItems);
+      await orderRepository.clearCart();
+      _cartItems = [];
+      emit(OrderPlaced(order));
+    } catch (e) {
+      emit(OrderError(e is Failure ? e : ServerFailure()));
+    }
+  }
+
+  Future<void> _onRetryPlaceOrder(RetryPlaceOrder event, Emitter<OrderState> emit) async {
+    emit(OrderLoading());
+    try {
+      if (_cartItems.isEmpty) {
+        emit(OrderError(ValidationFailure('Cart is empty')));
+        return;
+      }
+      final order = await orderRepository.placeOrder(_cartItems);
+      await orderRepository.clearCart();
+      _cartItems = [];
       emit(OrderPlaced(order));
     } catch (e) {
       emit(OrderError(e is Failure ? e : ServerFailure()));

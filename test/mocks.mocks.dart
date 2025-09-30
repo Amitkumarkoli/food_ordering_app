@@ -3,18 +3,25 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i6;
 
-import 'package:food_ordering_app/data/models/cart_item.dart' as _i9;
-import 'package:food_ordering_app/data/models/menu_item.dart' as _i7;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i13;
+import 'package:food_ordering_app/data/models/cart_item.dart' as _i10;
+import 'package:food_ordering_app/data/models/menu_item.dart' as _i8;
 import 'package:food_ordering_app/data/models/order.dart' as _i2;
-import 'package:food_ordering_app/data/models/restaurant.dart' as _i5;
+import 'package:food_ordering_app/data/models/restaurant.dart' as _i7;
 import 'package:food_ordering_app/data/repositories/menu_repository.dart'
-    as _i6;
-import 'package:food_ordering_app/data/repositories/order_repository.dart'
-    as _i8;
-import 'package:food_ordering_app/data/repositories/restaurant_repository.dart'
     as _i3;
+import 'package:food_ordering_app/data/repositories/order_repository.dart'
+    as _i9;
+import 'package:food_ordering_app/data/repositories/restaurant_repository.dart'
+    as _i5;
+import 'package:food_ordering_app/presentation/bloc/menu/menu_bloc.dart'
+    as _i11;
+import 'package:food_ordering_app/presentation/bloc/menu/menu_event.dart'
+    as _i12;
+import 'package:food_ordering_app/presentation/bloc/menu/menu_state.dart'
+    as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -36,84 +43,200 @@ class _FakeOrder_0 extends _i1.SmartFake implements _i2.Order {
     : super(parent, parentInvocation);
 }
 
+class _FakeMenuRepository_1 extends _i1.SmartFake
+    implements _i3.MenuRepository {
+  _FakeMenuRepository_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeMenuState_2 extends _i1.SmartFake implements _i4.MenuState {
+  _FakeMenuState_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [RestaurantRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRestaurantRepository extends _i1.Mock
-    implements _i3.RestaurantRepository {
+    implements _i5.RestaurantRepository {
   MockRestaurantRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<List<_i5.Restaurant>> getRestaurants() =>
+  _i6.Future<List<_i7.Restaurant>> getRestaurants() =>
       (super.noSuchMethod(
             Invocation.method(#getRestaurants, []),
-            returnValue: _i4.Future<List<_i5.Restaurant>>.value(
-              <_i5.Restaurant>[],
+            returnValue: _i6.Future<List<_i7.Restaurant>>.value(
+              <_i7.Restaurant>[],
             ),
           )
-          as _i4.Future<List<_i5.Restaurant>>);
+          as _i6.Future<List<_i7.Restaurant>>);
 }
 
 /// A class which mocks [MenuRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMenuRepository extends _i1.Mock implements _i6.MenuRepository {
+class MockMenuRepository extends _i1.Mock implements _i3.MenuRepository {
   MockMenuRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<List<_i7.MenuItem>> getMenuItems(String? restaurantId) =>
+  _i6.Future<List<_i8.MenuItem>> getMenuItems(String? restaurantId) =>
       (super.noSuchMethod(
             Invocation.method(#getMenuItems, [restaurantId]),
-            returnValue: _i4.Future<List<_i7.MenuItem>>.value(<_i7.MenuItem>[]),
+            returnValue: _i6.Future<List<_i8.MenuItem>>.value(<_i8.MenuItem>[]),
           )
-          as _i4.Future<List<_i7.MenuItem>>);
+          as _i6.Future<List<_i8.MenuItem>>);
 }
 
 /// A class which mocks [OrderRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOrderRepository extends _i1.Mock implements _i8.OrderRepository {
+class MockOrderRepository extends _i1.Mock implements _i9.OrderRepository {
   MockOrderRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> addToCart(_i9.CartItem? item) =>
+  _i6.Future<void> addToCart(_i10.CartItem? cartItem) =>
       (super.noSuchMethod(
-            Invocation.method(#addToCart, [item]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            Invocation.method(#addToCart, [cartItem]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i6.Future<void>);
 
   @override
-  _i4.Future<List<_i9.CartItem>> getCart() =>
+  _i6.Future<List<_i10.CartItem>> getCart() =>
       (super.noSuchMethod(
             Invocation.method(#getCart, []),
-            returnValue: _i4.Future<List<_i9.CartItem>>.value(<_i9.CartItem>[]),
-          )
-          as _i4.Future<List<_i9.CartItem>>);
-
-  @override
-  _i4.Future<void> clearCart() =>
-      (super.noSuchMethod(
-            Invocation.method(#clearCart, []),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
-
-  @override
-  _i4.Future<_i2.Order> placeOrder(List<_i9.CartItem>? items) =>
-      (super.noSuchMethod(
-            Invocation.method(#placeOrder, [items]),
-            returnValue: _i4.Future<_i2.Order>.value(
-              _FakeOrder_0(this, Invocation.method(#placeOrder, [items])),
+            returnValue: _i6.Future<List<_i10.CartItem>>.value(
+              <_i10.CartItem>[],
             ),
           )
-          as _i4.Future<_i2.Order>);
+          as _i6.Future<List<_i10.CartItem>>);
+
+  @override
+  _i6.Future<void> clearCart() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearCart, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<_i2.Order> placeOrder(List<_i10.CartItem>? cartItems) =>
+      (super.noSuchMethod(
+            Invocation.method(#placeOrder, [cartItems]),
+            returnValue: _i6.Future<_i2.Order>.value(
+              _FakeOrder_0(this, Invocation.method(#placeOrder, [cartItems])),
+            ),
+          )
+          as _i6.Future<_i2.Order>);
+}
+
+/// A class which mocks [MenuBloc].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMenuBloc extends _i1.Mock implements _i11.MenuBloc {
+  MockMenuBloc() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.MenuRepository get repository =>
+      (super.noSuchMethod(
+            Invocation.getter(#repository),
+            returnValue: _FakeMenuRepository_1(
+              this,
+              Invocation.getter(#repository),
+            ),
+          )
+          as _i3.MenuRepository);
+
+  @override
+  _i4.MenuState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeMenuState_2(this, Invocation.getter(#state)),
+          )
+          as _i4.MenuState);
+
+  @override
+  _i6.Stream<_i4.MenuState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i6.Stream<_i4.MenuState>.empty(),
+          )
+          as _i6.Stream<_i4.MenuState>);
+
+  @override
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+
+  @override
+  void add(_i12.MenuEvent? event) => super.noSuchMethod(
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onEvent(_i12.MenuEvent? event) => super.noSuchMethod(
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void emit(_i4.MenuState? state) => super.noSuchMethod(
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void on<E extends _i12.MenuEvent>(
+    _i13.EventHandler<E, _i4.MenuState>? handler, {
+    _i13.EventTransformer<E>? transformer,
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onTransition(
+    _i13.Transition<_i12.MenuEvent, _i4.MenuState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i6.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  void onChange(_i13.Change<_i4.MenuState>? change) => super.noSuchMethod(
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }

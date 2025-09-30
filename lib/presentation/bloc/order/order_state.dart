@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
-import '../../../data/models/cart_item.dart';
-import '../../../data/models/order.dart';
-import '../../../core/error/failures.dart';
+import 'package:food_ordering_app/core/error/failures.dart';
+import 'package:food_ordering_app/data/models/cart_item.dart';
+import 'package:food_ordering_app/data/models/order.dart';
 
 abstract class OrderState extends Equatable {
-  const OrderState();
-
   @override
   List<Object> get props => [];
 }
@@ -16,18 +14,17 @@ class OrderLoading extends OrderState {}
 
 class CartLoaded extends OrderState {
   final List<CartItem> cartItems;
-  final double total;
 
-  CartLoaded(this.cartItems) : total = cartItems.fold(0.0, (sum, item) => sum + item.totalPrice);
+  CartLoaded(this.cartItems);
 
   @override
-  List<Object> get props => [cartItems, total];
+  List<Object> get props => [cartItems];
 }
 
 class OrderPlaced extends OrderState {
   final Order order;
 
-  const OrderPlaced(this.order);
+  OrderPlaced(this.order);
 
   @override
   List<Object> get props => [order];
@@ -36,7 +33,7 @@ class OrderPlaced extends OrderState {
 class OrderError extends OrderState {
   final Failure failure;
 
-  const OrderError(this.failure);
+  OrderError(this.failure);
 
   @override
   List<Object> get props => [failure];

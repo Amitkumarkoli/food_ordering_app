@@ -1,9 +1,9 @@
-import '../models/cart_item.dart';
-import '../models/order.dart';
+import 'package:food_ordering_app/data/models/cart_item.dart';
+import 'package:food_ordering_app/data/models/order.dart';
 
 abstract class OrderRepository {
-  Future<void> addToCart(CartItem item);
+  Future<void> addToCart(CartItem cartItem);
   Future<List<CartItem>> getCart();
   Future<void> clearCart();
-  Future<Order> placeOrder(List<CartItem> items);
+  Future<Order> placeOrder(List<CartItem> cartItems);
 }
